@@ -1,9 +1,9 @@
 package com.example.api_rest_call;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ListActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Adapter;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
@@ -19,7 +19,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ListActivity {
 
     ListView list;
     ListAdapter adaptador;
@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autos);
 
         list = (ListView) findViewById(android.R.id.list);
@@ -42,7 +41,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void getListadoVehiculos(){
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+//        Toast.makeText(
+//                MainActivity.this,
+//                Long.toString(l.getItemIdAtPosition(position)),
+//                Toast.LENGTH_LONG
+//        ).show();
+        Intent intent = new Intent(MainActivity.this, DetalleActivity.class);
+
+        intent.putExtra("id", position + 1);
+
+        startActivity(intent);
+
+
+    }
+
+    public void getListadoVehiculos() {
 
         // Establezco una relacion de mi app con este endpoint:
         Retrofit retrofit = new Retrofit.Builder()
@@ -54,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         // Defnimos la interfaz para que utilice la base retrofit de mi aplicacion ()
         AutoService autoService = retrofit.create(AutoService.class);
 
-
         Call<List<Auto>> http_call = autoService.getAutos();
 
         http_call.enqueue(new Callback<List<Auto>>() {
@@ -63,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
                 // Si el servidor responde correctamente puedo hacer uso de la respuesta esperada:
                 autos.clear();
 
-                for (Auto auto: response.body()){
-                    autos.add(auto.getMarca() + " - " + auto.getModelo());
+                for (Auto auto : response.body()) {
+                    autos.add(auto.getMarca() + ": " + auto.getModelo());
                 }
 
                 // Aviso al base adapter que cambio mi set de datos.
@@ -76,13 +91,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Auto>> call, Throwable t) {
                 // SI el servidor o la llamada no puede ejecutarse, muestro un mensaje de eror:
-                Toast.makeText(MainActivity.this,"Hubo un error con la llamada a la API", Toast.LENGTH_LONG);
+                Toast.makeText(MainActivity.this, "Hubo un error con la llamada a la API", Toast.LENGTH_LONG);
 
             }
         });
 
     }
-
-
 
 }
