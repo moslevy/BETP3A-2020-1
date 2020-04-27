@@ -51,7 +51,7 @@ public class MainActivity extends ListActivity {
 //        ).show();
         Intent intent = new Intent(MainActivity.this, DetalleActivity.class);
 
-        intent.putExtra("id", position + 1);
+        intent.putExtra("id", position);
 
         startActivity(intent);
 
