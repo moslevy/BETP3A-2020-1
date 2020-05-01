@@ -3,16 +3,15 @@ package com.example.api_rest_call;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,7 +22,8 @@ public class MainActivity extends ListActivity {
 
     ListView list;
     ListAdapter adaptador;
-    ArrayList<String> autos = new ArrayList<>();
+    // ArrayList<String> autos = new ArrayList<>();
+    ArrayList<Auto> data_autos = new ArrayList<>();
 
 
     @Override
@@ -31,7 +31,7 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adaptador = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, autos);
+        adaptador = new AutoAdapter(this, data_autos);
 
         list = (ListView) findViewById(android.R.id.list);
 
@@ -51,10 +51,9 @@ public class MainActivity extends ListActivity {
 //        ).show();
         Intent intent = new Intent(MainActivity.this, DetalleActivity.class);
 
-        intent.putExtra("id", position);
-
+        intent.putExtra("id", data_autos.get(position).getId());
+        Log.i("DATA:", data_autos.get(position).getId() + " - " + data_autos.get(position).getModelo());
         startActivity(intent);
-
 
     }
 
@@ -76,10 +75,13 @@ public class MainActivity extends ListActivity {
             @Override
             public void onResponse(Call<List<Auto>> call, Response<List<Auto>> response) {
                 // Si el servidor responde correctamente puedo hacer uso de la respuesta esperada:
-                autos.clear();
+                //  autos.clear();
+                data_autos.clear();
 
                 for (Auto auto : response.body()) {
-                    autos.add(auto.getMarca() + ": " + auto.getModelo());
+
+                    data_autos.add(auto);
+                    //autos.add(auto.getMarca() + ": " + auto.getModelo());
                 }
 
                 // Aviso al base adapter que cambio mi set de datos.

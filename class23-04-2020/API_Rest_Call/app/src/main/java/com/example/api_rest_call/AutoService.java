@@ -27,7 +27,7 @@ public interface AutoService {
     String API_ROUTE_GET_ITEM = "app/api/read/{id}";
 
     @GET(API_ROUTE_GET_ITEM)
-    Call<Auto> getAuto(@Path("id") int idAuto);
+    Call<Auto> getAuto(@Path("id") String idAuto);
 
 
 

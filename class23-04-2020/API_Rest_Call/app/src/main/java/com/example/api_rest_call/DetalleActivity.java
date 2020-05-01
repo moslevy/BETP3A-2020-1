@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ public class DetalleActivity extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
 
-        int id = b.getInt("id");
+        String id = b.getString("id");
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -45,7 +46,7 @@ public class DetalleActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Auto> call, Response<Auto> response) {
                 Auto auto = response.body();
-
+                Log.i("Funciona","OK");
 
                 TextView idAuto = (TextView) findViewById(R.id.auto_id);
                 idAuto.setText(auto.getId());
@@ -64,6 +65,7 @@ public class DetalleActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Auto> call, Throwable t) {
                 Toast.makeText(DetalleActivity.this, "Hubo un error con la llamada a la API", Toast.LENGTH_LONG);
+
 
             }
         });
